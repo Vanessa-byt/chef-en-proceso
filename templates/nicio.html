@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100" 
+     style="background-image: url('{{ url_for('static', filename='decisiva.webp') }}'); background-size: 1900px; background-repeat: no-repeat; background-position: center;">
+    <div class="p-4 rounded text-white text-center" style="background-color: #59be56; width:500px; height:600px;">
+        <h3 class="mb-3">¡BIENVENIDO!</h3>
+        <div class="p-4 rounded text-start bg-white mx-auto" style="width:400px; height:470px;">
+            <div class="text-center mb-3">
+                <i class="bi bi-person-fill text-dark" style="font-size:70px;"></i>
+            </div>
+            <h4 class="text-dark text-center">Inicio de sesión de usuario</h4>
+
+            {% if mensaje %}
+            <div class="alert alert-danger text-center mt-2">{{ mensaje }}</div>
+            {% endif %}
+
+            <form class="text-dark" action="/login" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Ingresa tu email</label>
+                    <input type="email" class="form-control" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" name="contraseña" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                </div>
+
+                <p class="text-center mt-3">
+                    ¿No tienes cuenta aún? <a href="/formulario">Crea una aquí</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
