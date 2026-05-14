@@ -54,19 +54,17 @@ class ChefEnProceso:
         except Exception as e:
             print(f"Error al obtener usuario: {e}")
             return None
-    
     def obtener_usuario2(self, email: str, contraseña: str) -> Optional[Dict]:
+        """Obtener usuario por email y contraseña"""
         try:
-            email = self.usuarios.find_one({"email": ObjectId(email)})
-            if email:
-                #verificar el password tecleado por el usuario por el usuario con la base de datos
-                #regresar los atos del usuario
+            usuario = self.usuarios.find_one({"email": email, "password": contraseña})
+            if usuario:
                 usuario['_id'] = str(usuario['_id'])
             return usuario
         except Exception as e:
             print(f"Error al obtener usuario: {e}")
             return None
-    
+
     def crear_tarea(self, usuario_id: str, titulo: str, descripcion: str = "", 
                     fecha_limite: Optional[datetime] = None) -> Optional[str]:
         """Crear una nueva tarea para un usuario"""
