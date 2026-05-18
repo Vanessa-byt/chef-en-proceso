@@ -10,7 +10,6 @@ from ChefEnProceso import ChefEnProceso
 
 app = Flask(__name__)
 
-# Configuración de correo (usa variables de entorno en producción)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -18,10 +17,9 @@ app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'
 app.config['MAIL_PASSWORD'] = 'tu_password_app'
 mail = Mail(app)
 
-# Conexión a MongoDB Atlas
-connect = ChefEnProceso("mongodb+srv://ricardorosal7335_db_user:kiraymoster39@cluster0.ixvdcur.mongodb.net/")
+connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
 usuarios_collection = connect.usuarios
-recetas_collection = connect.recetas_guardadas
+recetas_collection = connect.tareas
 
 def obtener_usuario(email: str, contraseña: str) -> Optional[Dict]:
     usuario = usuarios_collection.find_one({"email": email})
@@ -72,7 +70,7 @@ def reset_password(token):
     
     return render_template("reset_form.html")
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
     email = request.form.get("email")
     contraseña = request.form.get("contraseña")
@@ -80,9 +78,39 @@ def login():
     usuario = obtener_usuario(email, contraseña)
 
     if usuario:
-        return redirect(url_for("recetario"))  # asegúrate de definir esta ruta
+        return redirect(url_for("recetario"))
     else:
         return render_template("nicio.html", mensaje="Usuario o contraseña incorrectos")
+    
+def crear_usuario(nombre: str, email: str, contrasena: str, apellido: str) -> Optional[str]:
+    try:
+        resultado = usuarios_collection.insert_one({
+            "nombre": nombre,
+            "apellido": apellido,
+            "email": email,
+            "contrasena": contrasena,
+            "fecha_registro": datetime.now(),
+            "activo": True
+        })
+        print("✅ Usuario insertado en MongoDB")
+        return str(resultado.inserted_id)
+    except DuplicateKeyError:
+        print(f"❌ Error: El email {email} ya está registrado")
+        return None
+
+    
+@app.route("/crearcuenta", methods=["GET", "POST"])
+def crear_cuenta():
+    nombre = request.form.get["nombre"]
+    apellido = request.form["apellido"]
+    email = request.form["email"]
+    contraseña = request.form["contraseña"]
+
+    id_usuario = crear_usuario(nombre, email, contraseña, apellido)
+    if id_usuario:
+        return render_template("gestor_tareas.html", usuario=email)
+    else:
+        return "❌ El correo ya está registrado"
 
 if __name__ == "__main__":
     app.run(debug=True)

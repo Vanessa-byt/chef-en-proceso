@@ -13,8 +13,8 @@ class ChefEnProceso:
         try:
             self.cliente = MongoClient(uri, serverSelectionTimeoutMS=5000)
             self.cliente.admin.command('ping')
-            self.db = self.recetario['Recetario']
-            self.recetas_guardadas = self.db['recetas_guardadas']
+            self.db = self.cliente['recetario']
+            self.tareas = self.db['recetas_guardadas']
             self.usuarios = self.db['usuarios']
             
             # Crear índices necesarios
