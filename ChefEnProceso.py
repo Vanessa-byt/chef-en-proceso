@@ -1,3 +1,4 @@
+
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError, ConnectionFailure
 from bson.objectid import ObjectId
@@ -12,8 +13,8 @@ class ChefEnProceso:
         try:
             self.cliente = MongoClient(uri, serverSelectionTimeoutMS=5000)
             self.cliente.admin.command('ping')
-            self.db = self.cliente['recetas']
-            self.tareas = self.db['recetas_guardadas']
+            self.db = self.recetario['Recetario']
+            self.recetas_guardadas = self.db['recetas_guardadas']
             self.usuarios = self.db['usuarios']
             
             # Crear índices necesarios
