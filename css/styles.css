@@ -1,26 +1,3 @@
-body {
-  background-color: #ffffff;
-}
-
-h1 {
-  font-family: 'Arial', sans-serif;
-  font-weight: bold;
-}
-
-.fondo-verde{
-    background-color:#40853e
-}
-.fondo-morado{
-background-color:   #4ba748
-}
-.fondo-blanco{
-    background-color: white
-}
-.fondo-morado-oscuro{background-color: #6f1aa0
-
-}
-
-
-.btn-success {
-  border-radius: 50px;
+.contenedores{
+    background-color: #4688a1
 }

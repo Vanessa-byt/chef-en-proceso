@@ -26,6 +26,13 @@ def obtener_usuario(email: str, contraseña: str) -> Optional[Dict]:
 def inicio():
     return render_template("nicio.html")
 
+@app.route("/olvidaste")
+def olvidaste():
+    return render_template("recuperar_contraseña.html")
+
+@app.route("/formulario")
+def formulario():
+    return render_template("formulario.html")
 
 @app.route("/login", methods=["POST"])
 def login():
