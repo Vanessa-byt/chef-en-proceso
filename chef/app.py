@@ -101,14 +101,14 @@ def crear_usuario(nombre: str, email: str, contrasena: str, apellido: str) -> Op
     
 @app.route("/crearcuenta", methods=["GET", "POST"])
 def crear_cuenta():
-    nombre = request.form.get["nombre"]
-    apellido = request.form["apellido"]
-    email = request.form["email"]
-    contraseña = request.form["contraseña"]
+    nombre = request.form.get("nombre")
+    apellido = request.form.get("apellido")
+    email = request.form.get("email")
+    contraseña = request.form.get("contraseña")
 
     id_usuario = crear_usuario(nombre, email, contraseña, apellido)
     if id_usuario:
-        return render_template("gestor_tareas.html", usuario=email)
+        return render_template("recetario.html", usuario=email)
     else:
         return "❌ El correo ya está registrado"
 
