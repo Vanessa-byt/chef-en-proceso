@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #659158;">
+  <div class="container-fluid">
+
+    <!-- Dropdown a la izquierda -->
+    <div class="dropdown">
+      <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Explorar
+      </a>
+      <ul class="dropdown-menu">
+        <li><h6 class="dropdown-header">Categorías</h6></li>
+        <li><a class="dropdown-item" href="#">Postres</a></li>
+        <li><a class="dropdown-item" href="#">Pollo y carne</a></li>
+        <li><a class="dropdown-item" href="#">Sopas</a></li>
+        <li><hr class="dropdown-divider"></li>
+
+        <li><h6 class="dropdown-header">Ingredientes</h6></li>
+        <li><a class="dropdown-item" href="#">Chocolate</a></li>
+        <li><a class="dropdown-item" href="#">Pollo</a></li>
+        <li><a class="dropdown-item" href="#">Chile</a></li>
+        <li><hr class="dropdown-divider"></li>
+
+        <li><h6 class="dropdown-header">Preferencias</h6></li>
+        <li class="dropdown-submenu">
+          <a class="dropdown-item dropdown-toggle" href="#">Recetas fáciles</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Vegetariano</a></li>
+            <li><a class="dropdown-item" href="#">Pescetariano</a></li>
+            <li><a class="dropdown-item" href="#">Omnívoro</a></li>
+            <li><a class="dropdown-item" href="#">Carnívoro</a></li>
+            <li><a class="dropdown-item" href="#">Vegano</a></li>
+            <li><a class="dropdown-item" href="#">Flexitariano</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Título centrado -->
+    <span class="navbar-brand mx-auto text-white fw-bold">Chef en proceso</span>
+
+    <!-- Usuario a la derecha -->
+    {% if user %}
+    <div class="dropdown">
+      <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{{ user['picture'] }}" alt="Foto de perfil"
+             class="rounded-circle" width="32" height="32">
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><span class="dropdown-item-text">{{ user['name'] }}</span></li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-heart-fill"></i> Favoritos</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="bi bi-person-dash-fill"></i> Cerrar sesión</a></li>
+      </ul>
+    </div>
+    {% else %}
+    <a class="btn btn-outline-light ms-3" href="{{ url_for('login') }}">Iniciar sesión</a>
+    {% endif %}
+
+  </div>
+</nav>
+{% endblock %}
