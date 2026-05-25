@@ -5,6 +5,7 @@ from pymongo.errors import DuplicateKeyError
 from typing import Optional, Dict
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
+from bson.objectid import ObjectId
 
 from ChefEnProceso import ChefEnProceso
 
@@ -15,9 +16,10 @@ app.config["SECRET_KEY"] = "tu_clave_secreta"   # clave secreta para sesiones
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'
-app.config['MAIL_PASSWORD'] = 'tu_password_app'
+app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'   # aquí tu correo completo
+app.config['MAIL_PASSWORD'] = 'contraseña_de_aplicacion'  # aquí la clave de 16 dígitos
 mail = Mail(app)
+
 
 # Conexión a MongoDB
 connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
@@ -40,10 +42,6 @@ def obtener_usuario(email: str, password: str) -> Optional[Dict]:
 @app.route("/")
 def inicio():
     return render_template("nicio.html")
-
-@app.route("/recetario")
-def recetario():
-    return render_template("recetario.html")
 
 @app.route("/olvidaste", methods=["GET", "POST"])
 def olvidaste():
@@ -149,6 +147,40 @@ def crear_cuenta():
             return "❌ El correo ya está registrado"
     else:
         return render_template("formulario.html")
+    
+@app.route("/recetario")
+def recetario():
+
+    recetas = recetas_collection.find()
+
+    return render_template(
+        "recetario.html",
+        recetas=recetas
+    )
+
+@app.route("/crear_receta", methods=["POST"])
+def crear_receta():
+
+    receta = {
+        "nombre": request.form.get("nombre"),
+        "ingredientes": request.form.get("ingredientes"),
+        "dificultad": request.form.get("dificultad"),
+        "pasos": request.form.get("pasos")
+    }
+
+    recetas_collection.insert_one(receta)
+
+    return redirect(url_for("recetario"))
+
+
+@app.route("/eliminar_receta/<id>")
+def eliminar_receta(id):
+
+    recetas_collection.delete_one({
+        "_id": ObjectId(id)
+    })
+
+    return redirect(url_for("recetario"))
 
 if __name__ == "__main__":
     app.run(debug=True)
