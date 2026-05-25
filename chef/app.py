@@ -1,33 +1,29 @@
 import uuid
+import smtplib
+from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 from flask import Flask, render_template, request, url_for, redirect, session
 from pymongo.errors import DuplicateKeyError
 from typing import Optional, Dict
-from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 
 from ChefEnProceso import ChefEnProceso
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "tu_clave_secreta"   # clave secreta para sesiones
+app.config["SECRET_KEY"] = "tu_clave_secreta"  
 
-# Configuración de correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'   # aquí tu correo completo
-app.config['MAIL_PASSWORD'] = 'contraseña_de_aplicacion'  # aquí la clave de 16 dígitos
-mail = Mail(app)
+app.config['MAIL_USERNAME'] = 'astridvanessalopez0509@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'ixqd hfmk xraw zkjx' 
 
-
-# Conexión a MongoDB
 connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
 usuarios_collection = connect.usuarios
 recetas_collection = connect.tareas
 usuarios_collection.create_index("email", unique=True)
 
-# Inyectar usuario en todas las plantillas
 @app.context_processor
 def inject_user():
     return dict(user=session.get("user"))
@@ -56,13 +52,22 @@ def olvidaste():
                 {"$set": {"reset_token": token, "reset_expiration": expiration}}
             )
             link = url_for("reset_password", token=token, _external=True)
-            msg = Message("Recupera tu contraseña",
-                        sender=app.config['MAIL_USERNAME'],
-                        recipients=[email])
-            msg.body = f"Usa este enlace para resetear tu contraseña: {link}"
-            mail.send(msg)
+            msg = MIMEText(f"Usa este enlace para resetear tu contraseña: {link}")
+            msg["Subject"] = "Recupera tu contraseña"
+            msg["From"] = app.config['MAIL_USERNAME']
+            msg["To"] = email
+
+            try:
+                with smtplib.SMTP(app.config['MAIL_SERVER'], app.config['MAIL_PORT']) as server:
+                    server.starttls()
+                    server.login(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
+                    server.sendmail(app.config['MAIL_USERNAME'], [email], msg.as_string())
+            except Exception as e:
+                print("❌ Error enviando correo:", e)
+
         return "Si el correo existe, recibirás un enlace."
     return render_template("recuperar_contraseña.html")
+
 
 @app.route("/reset/<token>", methods=["GET", "POST"])
 def reset_password(token):
@@ -136,7 +141,6 @@ def crear_cuenta():
 
         id_usuario = crear_usuario(nombre, email, password, apellido)
         if id_usuario:
-            # Guardar sesión al crear cuenta
             session["user"] = {
                 "name": nombre,
                 "email": email,
@@ -181,6 +185,25 @@ def eliminar_receta(id):
     })
 
     return redirect(url_for("recetario"))
+
+@app.route("/editar_receta/<id>", methods=["GET", "POST"])
+def editar_receta(id):
+    receta = recetas_collection.find_one({"_id": ObjectId(id)})
+
+    if request.method == "POST":
+        nuevos_datos = {
+            "nombre": request.form.get("nombre"),
+            "ingredientes": request.form.get("ingredientes"),
+            "dificultad": request.form.get("dificultad"),
+            "pasos": request.form.get("pasos")
+        }
+        recetas_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {**nuevos_datos, "fecha_actualizacion": datetime.now()}}
+        )
+        return redirect(url_for("recetario"))
+
+    return render_template("editar_receta.html", receta=receta)
 
 if __name__ == "__main__":
     app.run(debug=True)
