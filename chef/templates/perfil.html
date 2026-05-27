@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100"  
+     style="background-image: url('{{ url_for('static', filename='img/inicio.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; height:600px; border-radius:40px;">
+        <h4 class="mb-3">¡EDITA TU PERFIL!</h4>
+        <div class="p-4 text-start bg-white mx-auto" style="width:400px; height:470px; border-radius:30px;">
+            <div class="text-center mb-3">
+                <i class="bi bi-person-fill text-dark" style="font-size:70px;"></i>
+            </div>
+            <h4 class="text-dark text-center">Configuración de perfil</h4>
+
+            {% if mensaje %}
+            <div class="alert alert-info text-center mt-2" style="border-radius:20px;">{{ mensaje }}</div>
+            {% endif %}
+
+            <form class="text-dark" action="/perfil" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">editar nombre</label>
+                    <input type="text" class="form-control" name="nombre" value="{{ usuario.nombre }}" required style="border-radius:15px;">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nueva contraseña</label>
+                    <input type="password" class="form-control" name="password" style="border-radius:15px;">
+                    <small class="text-muted">Déjalo vacío si no deseas cambiarla</small>
+                </div>
+
+                <div class="text-center">
+                    <a type="button" class="btn btn-success" style="border-radius:20px;" href="/recetario">Guardar cambios</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -12,13 +12,11 @@ from ChefEnProceso import ChefEnProceso
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "tu_clave_secreta"
 
-
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'astridvanessalopez0509@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ixqd hfmk xraw zkjx'
-
 
 connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
 usuarios_collection = connect.usuarios
@@ -36,11 +34,9 @@ def obtener_usuario(email, password):
         return usuario
     return None
 
-
 @app.route("/")
 def inicio():
     return render_template("inicio.html")
-
 
 @app.route("/olvidaste", methods=["GET", "POST"])
 def olvidaste():
@@ -88,7 +84,6 @@ def reset_password(token):
     
     return render_template("reset_form.html")
 
-
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "POST":
@@ -112,6 +107,7 @@ def login():
 def logout():
     session.pop("user", None)
     return redirect(url_for("inicio"))
+
 def crear_usuario(nombre, email, password, apellido):
     try:
         hashed = generate_password_hash(password)
@@ -149,7 +145,6 @@ def crear_cuenta():
             return "El correo ya está registrado"
     else:
         return render_template("formulario.html")
-
 
 @app.route("/recetario")
 def recetario():
@@ -190,10 +185,44 @@ def editar_receta(id):
     return render_template("editar_receta.html", receta=receta)
 
 @app.route("/perfil")
-def hola ():
-    return render_template("perfil.html")
+def perfil():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    email = session["user"]["email"]
+    usuario = usuarios_collection.find_one({"email": email})
+    if not usuario:
+        return redirect(url_for("login"))
+    return render_template("perfil.html", usuario=usuario)
 
-        
+@app.route("/editarperfil", methods=["POST"])
+def editarperfil():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    email = session["user"]["email"]
+    usuario = usuarios_collection.find_one({"email": email})
+
+    if not usuario:
+        return redirect(url_for("login"))
+
+    nombre = request.form.get("nombre")
+    password = request.form.get("password")
+
+    cambios = {}
+    if nombre and nombre != usuario["nombre"]:
+        cambios["nombre"] = nombre
+    if password:
+        cambios["password"] = generate_password_hash(password)
+
+    if cambios:
+        usuarios_collection.update_one({"email": email}, {"$set": cambios})
+        session["user"]["name"] = cambios.get("nombre", session["user"]["name"])
+        mensaje = "Cambios guardados correctamente"
+        usuario.update(cambios)  
+    else:
+        mensaje = "No se realizaron cambios"
+
+    return render_template("perfil.html", usuario=usuario, mensaje=mensaje)
 
 if __name__ == "__main__":
     app.run(debug=True)
