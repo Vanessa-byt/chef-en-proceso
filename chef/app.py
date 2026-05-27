@@ -189,5 +189,11 @@ def editar_receta(id):
         return redirect(url_for("recetario"))
     return render_template("editar_receta.html", receta=receta)
 
+@app.route("/perfil")
+def hola ():
+    return render_template("perfil.html")
+
+        
+
 if __name__ == "__main__":
     app.run(debug=True)
