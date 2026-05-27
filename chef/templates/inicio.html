@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100" 
-     style="background-image: url('{{ url_for('static', filename='fondo inicio1.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-    <div class="p-4 rounded text-white text-center" style="background-color: #4688a1; width:500px; height:600px;">
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100"  
+     style="background-image: url('{{ url_for('static', filename='img/inicio.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; height:600px; border-radius:40px;">
         <h4 class="mb-3">¡BIENVENIDO A CHEF EN PROCESO!</h4>
-        <div class="p-4 rounded text-start bg-white mx-auto" style="width:400px; height:470px;">
+        <div class="p-4 text-start bg-white mx-auto" style="width:400px; height:470px; border-radius:30px;">
             <div class="text-center mb-3">
                 <i class="bi bi-person-fill text-dark" style="font-size:70px;"></i>
             </div>
             <h4 class="text-dark text-center">Inicio de sesión de usuario</h4>
 
             {% if mensaje %}
-            <div class="alert alert-danger text-center mt-2">{{ mensaje }}</div>
+            <div class="alert alert-danger text-center mt-2" style="border-radius:20px;">{{ mensaje }}</div>
             {% endif %}
 
             <form class="text-dark" action="/login" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Ingresa tu email</label>
-                    <input type="email" class="form-control" name="email" required>
+                    <input type="email" class="form-control" name="email" required style="border-radius:15px;">
                 </div>
 
                 <div class="mb-3">
@@ -26,11 +26,11 @@
                         <label class="form-label mb-0">Contraseña</label>
                         <a href="/olvidaste" class="text-decoration-none">Olvidé la contraseña</a>
                     </div>
-                    <input type="password" class="form-control" name="password" required>
+                    <input type="password" class="form-control" name="password" required style="border-radius:15px;">
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                    <button type="submit" class="btn btn-primary" style="border-radius:20px;">Iniciar sesión</button>
                 </div>
 
                 <p class="text-center mt-3">
