@@ -2,4 +2,4 @@
 .venv-clean/
 .uv-cache/
 __pycache__/
-.env
+

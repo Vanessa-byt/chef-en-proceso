@@ -3,7 +3,6 @@ import smtplib
 import uuid
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
-
 from bson.errors import InvalidId
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
