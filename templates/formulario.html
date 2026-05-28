@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100"  
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100"
      style="background-image: url('{{ url_for('static', filename='img/inicio.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; border-radius:30px;">
+    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; max-width:95%; border-radius:30px;">
         <h3 class="mb-3">Crea tu cuenta en Chef en Proceso</h3>
-        <h5 class="mb-3">Regístrate y comienza tu aventura para convertirte en un chef maestro </h5>
-        
-        <div class="p-4 bg-white mx-auto d-flex flex-column justify-content-center" 
-             style="width:400px; border-radius:25px;">
+        <h5 class="mb-3">Regístrate y comienza tu aventura para convertirte en un chef maestro</h5>
+
+        <div class="p-4 bg-white mx-auto d-flex flex-column justify-content-center"
+             style="width:400px; max-width:100%; border-radius:25px;">
             <div class="text-center mb-3">
                 <i class="bi bi-person-plus-fill text-dark" style="font-size:40px;"></i>
             </div>
             <h4 class="text-dark text-center mb-4">Registro de usuario</h4>
 
-            <form class="text-dark" action="/crearcuenta" method="POST">
+            <form class="text-dark" action="{{ url_for('crear_cuenta') }}" method="POST">
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
                     <input type="text" class="form-control" name="nombre" required style="border-radius:10px;">

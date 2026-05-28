@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">Editar receta</h2>
+  <form method="POST" class="p-3 border rounded bg-light">
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" name="nombre" value="{{ receta.nombre }}" required>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">Preparación</label>
+        <input type="number" class="form-control" name="tiempo_preparacion" value="{{ receta.tiempo_preparacion or '' }}" placeholder="min">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Cocción</label>
+        <input type="number" class="form-control" name="tiempo_coccion" value="{{ receta.tiempo_coccion or '' }}" placeholder="min">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Dificultad</label>
+        <select class="form-select" name="dificultad">
+          {% for nivel in ["Fácil", "Media", "Difícil"] %}
+          <option {% if receta.dificultad == nivel %}selected{% endif %}>{{ nivel }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Porciones</label>
+        <input type="number" class="form-control" name="porciones" value="{{ receta.porciones or '' }}" placeholder="porciones">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Descripción</label>
+      <textarea class="form-control" name="descripcion" rows="2">{{ receta.descripcion or '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Ingredientes</label>
+      <textarea class="form-control" name="ingredientes" rows="3" required>{{ receta.ingredientes }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Preparación</label>
+      <textarea class="form-control" name="pasos" rows="4" required>{{ receta.pasos }}</textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Presentación</label>
+        <textarea class="form-control" name="presentacion" rows="3">{{ receta.presentacion or '' }}</textarea>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label class="form-label">Tips</label>
+        <textarea class="form-control" name="tips" rows="3">{{ receta.tips or '' }}</textarea>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success">Guardar cambios</button>
+      <a href="{{ url_for('recetario') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

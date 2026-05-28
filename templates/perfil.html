@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid d-flex justify-content-center align-items-center vh-100"  
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100"
      style="background-image: url('{{ url_for('static', filename='img/inicio.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
-    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; height:600px; border-radius:40px;">
+    <div class="p-4 text-white text-center" style="background-color: #4688a1; width:500px; max-width:95%; border-radius:40px;">
         <h4 class="mb-3">¡EDITA TU PERFIL!</h4>
-        <div class="p-4 text-start bg-white mx-auto" style="width:400px; height:470px; border-radius:30px;">
+        <div class="p-4 text-start bg-white mx-auto" style="width:400px; max-width:100%; border-radius:30px;">
             <div class="text-center mb-3">
                 <i class="bi bi-person-fill text-dark" style="font-size:70px;"></i>
             </div>
@@ -15,9 +15,9 @@
             <div class="alert alert-info text-center mt-2" style="border-radius:20px;">{{ mensaje }}</div>
             {% endif %}
 
-            <form class="text-dark" action="/perfil" method="POST">
+            <form class="text-dark" action="{{ url_for('editarperfil') }}" method="POST">
                 <div class="mb-3">
-                    <label class="form-label">editar nombre</label>
+                    <label class="form-label">Editar nombre</label>
                     <input type="text" class="form-control" name="nombre" value="{{ usuario.nombre }}" required style="border-radius:15px;">
                 </div>
 
@@ -27,8 +27,9 @@
                     <small class="text-muted">Déjalo vacío si no deseas cambiarla</small>
                 </div>
 
-                <div class="text-center">
-                    <a type="button" class="btn btn-success" style="border-radius:20px;" href="/recetario">Guardar cambios</a>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="submit" class="btn btn-success" style="border-radius:20px;">Guardar cambios</button>
+                    <a class="btn btn-secondary" style="border-radius:20px;" href="{{ url_for('recetario') }}">Cancelar</a>
                 </div>
             </form>
         </div>
