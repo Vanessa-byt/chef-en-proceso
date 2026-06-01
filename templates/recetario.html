@@ -161,4 +161,20 @@
     </div>
   </div>
 </div>
+
+
+<div class="card" style="width: 18rem;">
+  <img src="{{ recetas.imagen_url }}" class="card-img-top" alt="{{ recetas.nombre_receta }}">
+  <div class="card-body">
+    <h5 class="card-title">{{ recetas.nombre_receta }}</h5>
+    <p class="card-text"><strong>Tipo de alimentación:</strong> {{ recetas.tipo_alimentacion }}</p>
+    <p class="card-text"><strong>Dificultad:</strong> {{ recetas.dificultad }}</p>
+    <p class="card-text"><strong>Tiempo de preparación:</strong> {{ recetas.tiempo_preparacion }}</p>
+    <p class="card-text"><strong>Costo estimado:</strong> {{ recetas.costo_estimado }}</p>
+    <p class="card-text"><strong>Ingredientes:</strong> {{ recetas.ingredientes }}</p>
+    <a href="#" class="btn btn-primary">Ver receta completa</a>
+  </div>
+</div>
+
+
 {% endblock %}

@@ -12,17 +12,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from ChefEnProceso import ChefEnProceso
 
-load_dotenv()
-
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
-app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER", "smtp.gmail.com")
-app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT", "587"))
-app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS", "true").lower() == "true"
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME", "")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD", "")
+app.secrey_key =("anessa0500")
+app.config["MAIL_SERVER"] ="smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] =True
+app.config["MAIL_USERNAME"] = "astridvanessalopez0509@gmail.com"
+app.config["MAIL_PASSWORD"] = "mzsk xksi tile kmfs"
 
-connect = ChefEnProceso(os.getenv("MONGODB_URI", "mongodb://localhost:27017/"))
+connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
 usuarios_collection = connect.usuarios
 recetas_collection = connect.tareas
 usuarios_collection.create_index("email", unique=True)
