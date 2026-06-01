@@ -14,7 +14,7 @@ class ChefEnProceso:
             self.cliente = MongoClient(uri, serverSelectionTimeoutMS=5000)
             self.cliente.admin.command("ping")
             self.db = self.cliente["recetario"]
-            self.tareas = self.db["recetas_guardadas"]
+            self.tareas = self.db["recetas"]
             self.usuarios = self.db["usuarios"]
             self._crear_indices()
             print("Conectado a MongoDB")

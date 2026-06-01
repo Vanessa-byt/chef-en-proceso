@@ -2,58 +2,46 @@
 
 {% block content %}
 <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #659158;">
-  <div class="container-fluid">
-    <div class="dropdown">
-      <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-        Explorar
-      </a>
-      <ul class="dropdown-menu">
-        <li><h6 class="dropdown-header">Categorías</h6></li>
-        <li><a class="dropdown-item" href="#">Postres</a></li>
-        <li><a class="dropdown-item" href="#">Pollo y carne</a></li>
-        <li><a class="dropdown-item" href="#">Sopas</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><h6 class="dropdown-header">Ingredientes</h6></li>
-        <li><a class="dropdown-item" href="#">Chocolate</a></li>
-        <li><a class="dropdown-item" href="#">Pollo</a></li>
-        <li><a class="dropdown-item" href="#">Chile</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><h6 class="dropdown-header">Preferencias</h6></li>
-        <li><a class="dropdown-item" href="#">Recetas fáciles</a></li>
-      </ul>
-    </div>
-
     <span class="navbar-brand mx-auto text-white fw-bold">Chef en Proceso</span>
+  <div class="container-fluid">
+
+
+    <form class="d-flex mx-auto" method="GET" action="{{ url_for('buscar_recetas') }}">
+      <input class="form-control me-2" type="search" name="q" placeholder="Buscar receta..." aria-label="Search">
+
+      <select class="form-select me-2" name="dificultad">
+        <option value="">Dificultad</option>
+        <option value="Fácil">Fácil</option>
+        <option value="Media">Media</option>
+        <option value="Difícil">Difícil</option>
+      </select>
+
+      <select class="form-select me-2" name="tipo_alimentacion">
+        <option value="">Tipo de alimentación</option>
+        <option value="Omnívoro">Omnívoro</option>
+        <option value="Vegetariano">Vegetariano</option>
+        <option value="Vegano">Vegano</option>
+        <option value="Flexitariano">Flexitariano</option>
+        <option value="Pescetariano">Pescetariano</option>
+        <option value="Carnívoro">Carnívoro</option>
+      </select>
+
+      <button class="btn btn-outline-light" type="submit">Filtrar</button>
+    </form>
 
     {% if user %}
     <div class="dropdown">
       <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
          <span class="text-white fw-bold">{{ user.name }}</span>
       </a>
-
       <ul class="dropdown-menu dropdown-menu-end">
         <li><span class="dropdown-item-text">{{ user.name }}</span></li>
-        <li>
-          <a class="dropdown-item" href="#">
-            <i class="bi bi-heart-fill"></i> Favoritos
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#crearRecetaModal">
-            <i class="bi bi-plus-circle-fill"></i> Crear receta
-          </a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="{{ url_for('perfil') }}">
-            <i class="bi bi-person-fill"></i> Editar perfil
-          </a>
-        </li>
+        <li><a class="dropdown-item" href="#"><i class="bi bi-heart-fill"></i> Favoritos</a></li>
+        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#crearRecetaModal"><i class="bi bi-plus-circle-fill"></i> Crear receta</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('perfil') }}"><i class="bi bi-person-fill"></i> Editar perfil</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li>
-          <a class="dropdown-item" href="{{ url_for('logout') }}">
-            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-          </a>
-        </li>
+        <li><a class="dropdown-item" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('objetivo') }}"><i class="bi bi-bluesky"></i> Objetivo</a></li>
       </ul>
     </div>
     {% else %}
@@ -66,22 +54,24 @@
   <div class="row">
     {% for receta in recetas %}
     <div class="col-md-4 mb-4">
-      <div class="card shadow-sm h-100">
+      <div class="card h-100 shadow-sm">
+        {% if receta.imagen_url %}
+        <img src="{{ receta.imagen_url }}" class="card-img-top" alt="{{ receta.nombre_receta }}">
+        {% endif %}
         <div class="card-body">
-          <h3 class="card-title">{{ receta.nombre }}</h3>
-          <span class="badge bg-success">{{ receta.dificultad }}</span>
-          <hr>
-          {% if receta.descripcion %}
-          <p>{{ receta.descripcion }}</p>
-          {% endif %}
+          <h4 class="card-title">{{ receta.nombre_receta }}</h4>
+          <p class="text-muted">
+            <strong>Dificultad:</strong> {{ receta.dificultad }} <br>
+            <strong>Tiempo de preparación:</strong> {{ receta.tiempo_preparacion }} <br>
+            <strong>Costo estimado:</strong> {{ receta.costo_estimado }} <br>
+            <strong>Tipo de alimentación:</strong> {{ receta.tipo_alimentacion }}
+          </p>
           <h6>Ingredientes</h6>
-          <p>{{ receta.ingredientes }}</p>
-          <h6>Preparación</h6>
-          <p>{{ receta.pasos }}</p>
-        </div>
-        <div class="card-footer d-flex justify-content-between">
-          <a href="{{ url_for('eliminar_receta', id=receta._id) }}" class="btn btn-danger btn-sm">Eliminar</a>
-          <a href="{{ url_for('editar_receta', id=receta._id) }}" class="btn btn-warning btn-sm">Editar</a>
+          <ul>
+            {% for ing in receta.ingredientes %}
+            <li>{{ ing }}</li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
@@ -100,81 +90,41 @@
         <h5 class="modal-title">Crear receta</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
       <div class="modal-body">
         <form method="POST" action="{{ url_for('crear_receta') }}" class="p-3">
           <div class="mb-3">
-            <input type="text" class="form-control form-control-lg" name="nombre" placeholder="Escribe el título aquí" required>
+            <input type="text" class="form-control form-control-lg" name="nombre_receta" placeholder="Escribe el título aquí" required>
           </div>
-
           <div class="row mb-3">
-            <div class="col-md-3">
-              <label class="form-label"><i class="bi bi-pencil"></i> Preparación</label>
-              <input type="number" class="form-control" name="tiempo_preparacion" placeholder="min">
+            <div class="col-md-4">
+              <label class="form-label">Tiempo de preparación</label>
+              <input type="text" class="form-control" name="tiempo_preparacion" placeholder="Ej: 1 hora">
             </div>
-            <div class="col-md-3">
-              <label class="form-label"><i class="bi bi-cup-hot"></i> Cocción</label>
-              <input type="number" class="form-control" name="tiempo_coccion" placeholder="min">
-            </div>
-            <div class="col-md-3">
-              <label class="form-label"><i class="bi bi-bar-chart"></i> Dificultad</label>
+            <div class="col-md-4">
+              <label class="form-label">Dificultad</label>
               <select class="form-select" name="dificultad">
                 <option>Fácil</option>
                 <option>Media</option>
                 <option>Difícil</option>
               </select>
             </div>
-            <div class="col-md-3">
-              <label class="form-label"><i class="bi bi-people"></i> Porciones</label>
-              <input type="number" class="form-control" name="porciones" placeholder="porciones">
+            <div class="col-md-4">
+              <label class="form-label">Costo estimado</label>
+              <input type="text" class="form-control" name="costo_estimado" placeholder="Ej: $180-$300 MXN">
             </div>
           </div>
-
           <div class="mb-3">
-            <textarea class="form-control" name="descripcion" rows="2" placeholder="Cuéntanos un poco más sobre tu receta"></textarea>
+            <label class="form-label">Tipo de alimentación</label>
+            <input type="text" class="form-control" name="tipo_alimentacion" placeholder="Ej: Omnívoro, Vegetariano, Vegano">
           </div>
-
           <div class="mb-3">
             <label class="form-label fw-bold">Ingredientes</label>
-            <textarea class="form-control" name="ingredientes" rows="3" placeholder="Escribe los ingredientes de tu receta" required></textarea>
+            <textarea class="form-control" name="ingredientes" rows="3" placeholder="Escribe los ingredientes separados por coma" required></textarea>
           </div>
-
-          <div class="mb-3">
-            <label class="form-label fw-bold">Preparación</label>
-            <textarea class="form-control" name="pasos" rows="4" placeholder="Escribe los pasos. Ejemplo: lava y desinfecta frutas y verduras" required></textarea>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Presentación</label>
-              <textarea class="form-control" name="presentacion" rows="3" placeholder="Describe cómo presentar tu platillo"></textarea>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Tips</label>
-              <textarea class="form-control" name="tips" rows="3" placeholder="Agrega consejos o trucos para tu receta"></textarea>
-            </div>
-          </div>
-
           <button type="submit" class="btn btn-success w-100">Crear receta</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
-<div class="card" style="width: 18rem;">
-  <img src="{{ recetas.imagen_url }}" class="card-img-top" alt="{{ recetas.nombre_receta }}">
-  <div class="card-body">
-    <h5 class="card-title">{{ recetas.nombre_receta }}</h5>
-    <p class="card-text"><strong>Tipo de alimentación:</strong> {{ recetas.tipo_alimentacion }}</p>
-    <p class="card-text"><strong>Dificultad:</strong> {{ recetas.dificultad }}</p>
-    <p class="card-text"><strong>Tiempo de preparación:</strong> {{ recetas.tiempo_preparacion }}</p>
-    <p class="card-text"><strong>Costo estimado:</strong> {{ recetas.costo_estimado }}</p>
-    <p class="card-text"><strong>Ingredientes:</strong> {{ recetas.ingredientes }}</p>
-    <a href="#" class="btn btn-primary">Ver receta completa</a>
-  </div>
-</div>
-
-
 {% endblock %}

@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from ChefEnProceso import ChefEnProceso
 
 app = Flask(__name__)
-app.secrey_key =("anessa0500")
+app.secret_key =("tu_clave_ultra_secreta")
 app.config["MAIL_SERVER"] ="smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] =True
@@ -184,9 +184,25 @@ def crear_cuenta():
 
 @app.route("/recetario")
 def recetario():
-    recetas = recetas_collection.find()
+    recetas = list(recetas_collection.find())
     return render_template("recetario.html", recetas=recetas)
 
+@app.route("/buscar")
+def buscar_recetas():
+    query = {}
+    q = request.args.get("q")
+    dificultad = request.args.get("dificultad")
+    tipo = request.args.get("tipo_alimentacion")
+
+    if q:
+        query["nombre_receta"] = {"$regex": q, "$options": "i"}
+    if dificultad:
+        query["dificultad"] = dificultad
+    if tipo:
+        query["tipo_alimentacion"] = tipo
+
+    recetas = list(recetas_collection.find(query))
+    return render_template("recetario.html", recetas=recetas, user=None)
 
 @app.route("/crear_receta", methods=["POST"])
 def crear_receta():
@@ -289,6 +305,9 @@ def editarperfil():
 
     return render_template("perfil.html", usuario=usuario, mensaje=mensaje)
 
+@app.route("/objetivo")
+def objetivo():
+    return render_template("objetivo.html")            
 
 if __name__ == "__main__":
     app.run(debug=True)
