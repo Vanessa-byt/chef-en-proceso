@@ -275,49 +275,6 @@ def editar_receta(id):
     return render_template("editar_receta.html", receta=receta)
 
 
-
-@app.route("/perfil")
-def perfil():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    email = session["user"]["email"]
-    usuario = usuarios_collection.find_one({"email": email})
-    if not usuario:
-        return redirect(url_for("login"))
-
-    return render_template("perfil.html", usuario=usuario)
-
-
-@app.route("/editarperfil", methods=["POST"])
-def editarperfil():
-    if "user" not in session:
-        return redirect(url_for("login"))
-
-    email = session["user"]["email"]
-    usuario = usuarios_collection.find_one({"email": email})
-    if not usuario:
-        return redirect(url_for("login"))
-
-    nombre = request.form.get("nombre")
-    password = request.form.get("password")
-
-    cambios = {}
-    if nombre and nombre != usuario["nombre"]:
-        cambios["nombre"] = nombre
-    if password:
-        cambios["password"] = generate_password_hash(password)
-
-    if cambios:
-        usuarios_collection.update_one({"email": email}, {"$set": cambios})
-        session["user"]["name"] = cambios.get("nombre", session["user"]["name"])
-        mensaje = "Cambios guardados correctamente"
-        usuario.update(cambios)
-    else:
-        mensaje = "No se realizaron cambios"
-
-    return render_template("perfil.html", usuario=usuario, mensaje=mensaje)
-
 @app.route("/objetivo")
 def objetivo():
     return render_template("objetivo.html")   
@@ -343,7 +300,7 @@ def favoritos1(id):
             })
     return redirect(url_for("recetario"))
 
-         
+
 @app.route("/favoritos")
 def favoritos():
     if "user" not in session:
