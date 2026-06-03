@@ -5,3 +5,10 @@
 body {
     min-height: 100vh;
 }
+
+.color_verde {
+    background-color: #659158
+}
+.color_azul {
+    background-color: #4688a1;
+}

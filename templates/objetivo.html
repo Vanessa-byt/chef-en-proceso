@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100"
+     style="background-image: url('{{ url_for('static', filename='img/inicio.avif') }}'); background-size: cover; background-repeat: no-repeat; background-position: center;">
 <div class="container my-5">
-    <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #a8e6cf, #dcedc1);">
+    <div class="card shadow-lg border-0">
         <div class="card-header text-center bg-success text-white">
             <h2 class="mb-0">🌮 Objetivos de nuestra página de recetas</h2>
         </div>
-        <div class="card-body">
+        <div class="card-body ">
             <p class="lead text-dark">
                 Nuestro objetivo es convertir la cocina en una experiencia accesible, divertida y personalizada para todos.
             </p>
@@ -17,5 +19,6 @@
             <p><strong>Fomentar la cultura gastronómica:</strong> preservar y difundir la riqueza de la cocina tradicional y moderna, celebrando sabores que nos unen.</p>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

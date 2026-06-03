@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<nav class="navbar navbar-expand-lg fixed-top" style="background-color: #659158;">
+<nav class="navbar navbar-expand-lg fixed-to color_verde">
     <span class="navbar-brand mx-auto text-white fw-bold">Chef en Proceso</span>
   <div class="container-fluid">
 
@@ -72,6 +72,11 @@
             <li>{{ ing }}</li>
             {% endfor %}
           </ul>
+
+          {% if receta.es_usuario %}
+          <a href="{{ url_for('editar_receta', id=receta._id) }}" class="btn btn-sm btn-primary">Editar receta</a>
+          <a href="{{ url_for('eliminar_receta', id=receta._id) }}" class="btn btn-sm btn-danger">Eliminar receta</a>
+          {% endif %}
         </div>
       </div>
     </div>

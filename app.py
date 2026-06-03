@@ -218,10 +218,15 @@ def crear_receta():
         "presentacion": request.form.get("presentacion"),
         "tips": request.form.get("tips"),
         "fecha_creacion": datetime.now(),
+        "es_usuario": True,
+        "creador": session["user"]["email"] if "user" in session else None
     }
+    
+    ingredientes_raw = request.form['ingredientes']  
+    ingredientes = [i.strip() for i in ingredientes_raw.split(",")]
+    receta["ingredientes"] = ingredientes
     recetas_collection.insert_one(receta)
     return redirect(url_for("recetario"))
-
 
 @app.route("/eliminar_receta/<id>")
 def eliminar_receta(id):
@@ -229,8 +234,6 @@ def eliminar_receta(id):
     if object_id:
         recetas_collection.delete_one({"_id": object_id})
     return redirect(url_for("recetario"))
-
-
 @app.route("/editar_receta/<id>", methods=["GET", "POST"])
 def editar_receta(id):
     object_id = get_object_id(id)
@@ -242,9 +245,13 @@ def editar_receta(id):
         return redirect(url_for("recetario"))
 
     if request.method == "POST":
+
+        ingredientes_raw = request.form.get("ingredientes", "")
+        ingredientes = [i.strip() for i in ingredientes_raw.split(",")]
+
         nuevos_datos = {
             "nombre": request.form.get("nombre"),
-            "ingredientes": request.form.get("ingredientes"),
+            "ingredientes": ingredientes,
             "dificultad": request.form.get("dificultad"),
             "pasos": request.form.get("pasos"),
             "descripcion": request.form.get("descripcion"),
@@ -254,13 +261,17 @@ def editar_receta(id):
             "presentacion": request.form.get("presentacion"),
             "tips": request.form.get("tips"),
         }
+
         recetas_collection.update_one(
             {"_id": object_id},
             {"$set": {**nuevos_datos, "fecha_actualizacion": datetime.now()}},
         )
         return redirect(url_for("recetario"))
+    
 
+    receta["ingredientes"] = ", ".join(receta["ingredientes"])
     return render_template("editar_receta.html", receta=receta)
+
 
 
 @app.route("/perfil")
