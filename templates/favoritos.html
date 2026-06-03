@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="margin-top:120px;">
+  <h2 class="text-center mb-4">Mis recetas favoritas</h2>
+  <div class="row">
+    {% for receta in recetas %}
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        {% if receta.receta.imagen_url %}
+        <img src="{{ receta.receta.imagen_url }}" class="card-img-top" alt="{{ receta.receta.nombre_receta }}">
+        {% endif %}
+        <div class="card-body">
+          <h4 class="card-title">{{ receta.receta.nombre_receta }}</h4>
+          <p class="text-muted">
+            <strong>Dificultad:</strong> {{ receta.receta.dificultad }} <br>
+            <strong>Tiempo de preparación:</strong> {{ receta.receta.tiempo_preparacion }} <br>
+            <strong>Costo estimado:</strong> {{ receta.receta.costo_estimado }} <br>
+            <strong>Tipo de alimentación:</strong> {{ receta.receta.tipo_alimentacion }}
+          </p>
+          <h6>Ingredientes</h6>
+          <ul>
+            {% for ing in receta.receta.ingredientes %}
+            <li>{{ ing }}</li>
+            {% endfor %}
+          </ul>
+
+          <form method="POST" action="{{ url_for('favoritos1', id=receta.receta_id) }}">
+            <button type="submit" class="btn btn-link">
+              <i class="bi bi-heart-fill"></i> Quitar de favoritos
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+      <div class="alert alert-info text-center">Todavía no tienes recetas guardadas en favoritos.</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -36,7 +36,7 @@
       </a>
       <ul class="dropdown-menu dropdown-menu-end">
         <li><span class="dropdown-item-text">{{ user.name }}</span></li>
-        <li><a class="dropdown-item" href="#"><i class="bi bi-heart-fill"></i> Favoritos</a></li>
+        <li><a class="dropdown-item" href="{{ url_for('favoritos') }}"><i class="bi bi-heart-fill"></i> Favoritos</a></li>
         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#crearRecetaModal"><i class="bi bi-plus-circle-fill"></i> Crear receta</a></li>
         <li><a class="dropdown-item" href="{{ url_for('perfil') }}"><i class="bi bi-person-fill"></i> Editar perfil</a></li>
         <li><hr class="dropdown-divider"></li>
@@ -72,6 +72,13 @@
             <li>{{ ing }}</li>
             {% endfor %}
           </ul>
+
+          <form method="POST" action="{{ url_for('favoritos1', id=receta._id) }}">
+            <button type="submit" class="btn btn-link" title="Agregar a favoritos">
+              <i class="bi {% if receta.guardada %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+            </button>
+          </form>
+
 
           {% if receta.es_usuario %}
           <a href="{{ url_for('editar_receta', id=receta._id) }}" class="btn btn-sm btn-primary">Editar receta</a>

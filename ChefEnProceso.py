@@ -16,6 +16,7 @@ class ChefEnProceso:
             self.db = self.cliente["recetario"]
             self.tareas = self.db["recetas"]
             self.usuarios = self.db["usuarios"]
+            self.guardar= self.db["recetas_guardadas"]
             self._crear_indices()
             print("Conectado a MongoDB")
         except ConnectionFailure:

@@ -23,6 +23,8 @@ app.config["MAIL_PASSWORD"] = "mzsk xksi tile kmfs"
 connect = ChefEnProceso("mongodb+srv://Ricardo_idk:kiraymoster39@cluster0.ixvdcur.mongodb.net/?appName=Cluster0")
 usuarios_collection = connect.usuarios
 recetas_collection = connect.tareas
+favoritos_collection = connect.guardar
+
 usuarios_collection.create_index("email", unique=True)
 
 
@@ -318,7 +320,39 @@ def editarperfil():
 
 @app.route("/objetivo")
 def objetivo():
-    return render_template("objetivo.html")            
+    return render_template("objetivo.html")   
+
+@app.route("/favoritos1/<id>", methods=["POST"])
+def favoritos1(id):
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    usuario_email = session["user"]["email"]
+
+    favorito = favoritos_collection.find_one({"usuario_email": usuario_email, "receta_id": id})
+
+    if favorito:
+        favoritos_collection.delete_one({"usuario_email": usuario_email, "receta_id": id})
+    else:
+        receta = recetas_collection.find_one({"_id": get_object_id(id)})
+        if receta:
+            favoritos_collection.insert_one({
+                "usuario_email": usuario_email,
+                "receta_id": id,
+                "receta": receta
+            })
+    return redirect(url_for("recetario"))
+
+         
+@app.route("/favoritos")
+def favoritos():
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    usuario_email = session["user"]["email"]
+    recetas_favoritas = list(favoritos_collection.find({"usuario_email": usuario_email}))
+    return render_template("favoritos.html", recetas=recetas_favoritas, user=session["user"])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
