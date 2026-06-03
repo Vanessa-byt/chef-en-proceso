@@ -1,11 +1,9 @@
-import os
 import smtplib
 import uuid
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from bson.errors import InvalidId
 from bson.objectid import ObjectId
-from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from pymongo.errors import DuplicateKeyError
 from werkzeug.security import check_password_hash, generate_password_hash
